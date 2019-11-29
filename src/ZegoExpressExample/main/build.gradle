@@ -5,7 +5,7 @@ apply plugin: 'bugly'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.zego.expresssample"
+        applicationId "com.zego.expressquickstart"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode getAppVersionCode()
