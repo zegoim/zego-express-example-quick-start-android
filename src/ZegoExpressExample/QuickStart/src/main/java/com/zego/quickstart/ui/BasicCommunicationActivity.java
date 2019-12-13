@@ -1,12 +1,14 @@
-package com.zego.expressquickstart.ui;
+package com.zego.quickstart.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,11 +16,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.zego.common.GetAppIdConfig;
+import com.zego.common.GetAppIDConfig;
 import com.zego.common.util.AppLogger;
 import com.zego.common.widgets.log.FloatingView;
-import com.zego.expressquickstart.R;
-import com.zego.expressquickstart.databinding.ActivityMainBinding;
+import com.zego.quickstart.R;
+import com.zego.quickstart.databinding.BasicCommunicationBinding;
 import com.zego.zegoexpress.ZegoExpressEngine;
 import com.zego.zegoexpress.callback.IZegoEventHandler;
 import com.zego.zegoexpress.constants.ZegoLanguage;
@@ -36,8 +38,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class MainActivity extends AppCompatActivity {
-    ActivityMainBinding binding;
+public class BasicCommunicationActivity extends AppCompatActivity {
+    BasicCommunicationBinding binding;
     ImageButton ib_local_mic;
     ImageButton ib_remote_stream_audio;
     boolean publishMicEnable = true;
@@ -53,24 +55,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.basic_communication);
         /** 申请权限 */
+        /** Request permission */
         checkOrRequestPermission();
 
         /** 添加悬浮日志视图 */
+        /** Add floating log view */
         FloatingView.get().add();
         /** 记录SDK版本号 */
+        /** Record SDK version */
         AppLogger.getInstance().i("SDK version : %s", ZegoExpressEngine.getVersion());
 
         TextView tvAppID = findViewById(R.id.tv_appid);
-        tvAppID.setText("AppID: " + GetAppIdConfig.appId);
+        tvAppID.setText("AppID: " + GetAppIDConfig.appID);
 
-        /** 示例Demo使用一个固定的房间ID */
+        /** 示例代码使用一个固定的房间ID */
+        /** RoomID used by example */
         roomID = "room123";
         TextView tvRoomID = findViewById(R.id.tv_roomid);
         tvRoomID.setText("房间ID: " + roomID);
 
         /** 生成随机的用户ID，避免不同手机使用时用户ID冲突，相互影响 */
+        /** Generate random user ID to avoid user ID conflict and mutual influence when different mobile phones are used */
         String randomSuffix = String.valueOf(new Date().getTime()%(new Date().getTime()/1000));
         userID = "user" + randomSuffix;
         userName = "user" + randomSuffix;
@@ -78,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         tvUserID.setText("用户ID: " + userID);
 
         /** 生成随机的流ID, 默认推流ID和拉流ID一致，可以拉自己的流，也可以在界面上修改流ID */
+        /** Generate a random streamID. the default publishing streamID is the same as playing streamID. you can modify in the UI */
         publishStreamID = "s" + randomSuffix;
         playStreamID = "s" + randomSuffix;
         EditText et = findViewById(R.id.ed_publish_stream_id);
@@ -86,8 +94,10 @@ public class MainActivity extends AppCompatActivity {
         et.setText(playStreamID);
 
         /** 本地音频输入开关 */
+        /** Local MIC switch */
         ib_local_mic = findViewById(R.id.ib_local_mic);
-        /** 从远端拉取的流，音频是否静音的开关 */
+        /** 音频播放是否静音的开关 */
+        /** Switch for mute audio output */
         ib_remote_stream_audio = findViewById(R.id.ib_remote_mic);
     }
 
@@ -98,20 +108,24 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /** 点击初始化按钮 */
     /** Click Init Button */
     public void ClickInit(View view) {
         Button button = (Button)view;
-        if (button.getText().equals("初始化SDK")) {
+        if (button.getText().equals(getString(R.string.tx_init_sdk))) {
+            /** 初始化SDK, 使用测试环境，使用通用场景 */
             /** Initialize SDK, use test environment, access to general scenarios */
-            engine = ZegoExpressEngine.createEngine(GetAppIdConfig.appId, GetAppIdConfig.appSign, true, ZegoScenario.SCENARIO_GENERAL, getApplication(), null);
-            AppLogger.getInstance().i("初始化SDK成功");
-            Toast.makeText(this, "初始化SDK成功", Toast.LENGTH_SHORT).show();
-            button.setText("释放SDK");
+            engine = ZegoExpressEngine.createEngine(GetAppIDConfig.appID, GetAppIDConfig.appSign, true, ZegoScenario.SCENARIO_GENERAL, getApplication(), null);
+            AppLogger.getInstance().i(getString(R.string.tx_init_sdk_ok));
+            Toast.makeText(this, getString(R.string.tx_init_sdk_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_uninit_sdk));
             engine.setDebugVerbose(true, ZegoLanguage.LANGUAGE_CHINESE);
             engine.addEventHandler(new IZegoEventHandler() {
+                /** 常用回调 */
                 /** The following are callbacks frequently used */
                 @Override
                 public void onRoomStateUpdate(String roomID, ZegoRoomState state, int errorCode) {
+                    /** 房间状态回调，在登录房间后，当房间状态发生变化（例如房间断开，认证失败等），SDK会通过该接口通知 */
                     /** Room status update callback: after logging into the room, when the room connection status changes
                      * (such as room disconnection, login authentication failure, etc.), the SDK will notify through the callback
                      */
@@ -120,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onRoomUserUpdate(String roomID, ZegoUpdateType updateType, ArrayList<ZegoUser> userList) {
+                    /** 房间状态更新，在登录房间后，当用户进入或退出房间，SDK会通过该接口通知 */
                     /** User status is updated. After logging into the room, when a user is added or deleted in the room,
                      * the SDK will notify through this callback
                      */
@@ -131,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onRoomStreamUpdate(String roomID, ZegoUpdateType updateType, ArrayList<ZegoStream> streamList) {
-                    /** The stream status is updated. After logging into the room, when there is a new push or delete of audio and video stream,
+                    /** 流状态更新，在登录房间后，当房间内有新增或删除音视频流，SDK会通过该接口通知 */
+                    /** The stream status is updated. After logging into the room, when there is a new publish or delete of audio and video stream,
                      * the SDK will notify through this callback */
                     AppLogger.getInstance().i("onRoomStreamUpdate: roomID = " + roomID + ", updateType = " + updateType);
                     for (int i = 0; i < streamList.size(); i++) {
@@ -141,12 +157,14 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onDebugError(int errorCode, String funcName, String info) {
+                    /** 调试异常信息通知 */
                     /** Printing debugging error information */
                     AppLogger.getInstance().i("onDebugError: errorCode = " + errorCode + ", funcName = " + funcName + ", info = " + info);
                 }
 
                 @Override
                 public void onPublisherStateUpdate(String streamID, ZegoPublisherState state, int errorCode) {
+                    /** 在调用推流接口成功后，推流状态变更（例如由于网络中断引起的流状态异常），SDK会通过该接口通知 */
                     /** After calling the stream publishing interface successfully, when the status of the stream changes,
                      * such as the exception of streaming caused by network interruption, the SDK will notify through this callback
                      */
@@ -156,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onPlayerStateUpdate(String streamID, ZegoPlayerState state, int errorCode) {
+                    /** 在调用拉流接口成功后，拉流状态变更（例如由于网络中断引起的流状态异常），SDK会通过该接口通知 */
                     /** After calling the streaming interface successfully, when the status of the stream changes,
                      * such as network interruption leading to abnormal situation, the SDK will notify through
                      * this callback */
@@ -164,116 +183,129 @@ public class MainActivity extends AppCompatActivity {
             });
         }
         else {
+            /** 销毁引擎 */
             /** Destroy Engine */
             ZegoExpressEngine.destroyEngine();
             engine = null;
-            AppLogger.getInstance().i("释放SDK成功");
-            Toast.makeText(this, "释放SDK成功", Toast.LENGTH_SHORT).show();
-            button.setText("初始化SDK");
+            AppLogger.getInstance().i(getString(R.string.tx_uninit_sdk_ok));
+            Toast.makeText(this, getString(R.string.tx_uninit_sdk_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_init_sdk));
         }
 
     }
 
+    /** 点击登录按钮 */
     /** Click Login Button */
     public void ClickLogin(View view) {
         if (engine == null) {
-            Toast.makeText(this, "请先初始化SDK", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_sdk_not_init), Toast.LENGTH_SHORT).show();
             return;
         }
         Button button = (Button)view;
-        if (button.getText().equals("进入房间")) {
+        if (button.getText().equals(getString(R.string.tx_basic_login_room))) {
+            /** 创建用户对象 */
             /** Create user */
             ZegoUser user = new ZegoUser(userID, userName);
 
+            /** 开始登录房间 */
             /** Begin to login room */
             engine.loginRoom(roomID, user, null);
-            AppLogger.getInstance().i("调用进入房间接口成功, 用户ID = " + userID + " , 用户名 = " + userName);
-            Toast.makeText(this, "调用进入房间接口成功", Toast.LENGTH_SHORT).show();
-            button.setText("退出房间");
+            AppLogger.getInstance().i("Login room OK, userID = " + userID + " , userName = " + userName);
+            Toast.makeText(this, getString(R.string.tx_basic_login_room_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_logout_room));
         }
         else {
+            /** 开始退出房间 */
             /** Begin to logout room */
             engine.logoutRoom(roomID);
-            AppLogger.getInstance().i("调用退出房间接口成功, 用户ID = " + userID + " , 用户名 = " + userName);
-            Toast.makeText(this, "调用退出房间接口成功", Toast.LENGTH_SHORT).show();
-            button.setText("进入房间");
+            AppLogger.getInstance().i("Logout room OK, userID = " + userID + " , userName = " + userName);
+            Toast.makeText(this, getString(R.string.tx_basic_logout_room_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_login_room));
         }
     }
 
+    /** 点击推流按钮 */
     /** Click Publish Button */
     public void ClickPublish(View view) {
         if (engine == null) {
-            Toast.makeText(this, "请先初始化SDK", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_sdk_not_init), Toast.LENGTH_SHORT).show();
             return;
         }
 
         Button button = (Button)view;
-        if (button.getText().equals("推流")) {
+        if (button.getText().equals(getString(R.string.tx_basic_publish))) {
             EditText et = findViewById(R.id.ed_publish_stream_id);
             String streamID = et.getText().toString();
             publishStreamID = streamID;
 
+            /** 开始推流 */
             /** Begin to publish stream */
             engine.startPublishing(streamID);
-            AppLogger.getInstance().i("调用推流接口成功, 流ID = " + streamID);
+            AppLogger.getInstance().i("Publish stream OK, streamID = " + streamID);
             View local_view = findViewById(R.id.local_view);
-            Toast.makeText(this, "调用推流接口成功", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_basic_publish_ok), Toast.LENGTH_SHORT).show();
 
+            /** 开始预览并设置本地预览视图 */
             /** Start preview and set the local preview view. */
-            engine.startPreview(new ZegoCanvas(local_view, ZegoViewMode.VIEW_MODE_ASPECT_FILL));
+            engine.startPreview(new ZegoCanvas(local_view));
 
-            AppLogger.getInstance().i("调用启动预览成功");
-            Toast.makeText(this, "调用启动预览成功", Toast.LENGTH_SHORT).show();
-            button.setText("停止推流");
+            AppLogger.getInstance().i("Start preview OK");
+            Toast.makeText(this, getString(R.string.tx_basic_preview_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_stop_publish));
         }
         else {
+            /** 停止推流 */
             /** Begin to stop publish stream */
             engine.stopPublishing();
 
-            /** Start stop preview and set the local preview view. */
+            /** 停止本地预览 */
+            /** Start stop preview */
             engine.stopPreview();
-            AppLogger.getInstance().i("调用停止推流接口成功");
-            Toast.makeText(this, "调用停止推流接口成功", Toast.LENGTH_SHORT).show();
-            button.setText("推流");
+            AppLogger.getInstance().i("Stop publish stream OK");
+            Toast.makeText(this, getString(R.string.tx_basic_stop_publish_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_publish));
         }
     }
 
+    /** 点击拉流按钮 */
     /** Click Play Button */
     public void ClickPlay(View view) {
         if (engine == null) {
-            Toast.makeText(this, "请先初始化SDK", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_sdk_not_init), Toast.LENGTH_SHORT).show();
             return;
         }
 
         Button button = (Button)view;
-        if (button.getText().equals("拉流")) {
+        if (button.getText().equals(getString(R.string.tx_basic_play))) {
             EditText et = findViewById(R.id.ed_play_stream_id);
             String streamID = et.getText().toString();
             playStreamID = streamID;
             View play_view = findViewById(R.id.remote_view);
 
+            /** 开始拉流 */
             /** Begin to play stream */
-            engine.startPlayingStream(playStreamID, new ZegoCanvas(play_view, ZegoViewMode.VIEW_MODE_ASPECT_FILL));
+            engine.startPlayingStream(playStreamID, new ZegoCanvas(play_view));
             engine.muteAudioOutput(playStreamMute);
-            AppLogger.getInstance().i("调用拉流接口成功, 流ID = " + playStreamID);
-            Toast.makeText(this, "调用拉流接口成功", Toast.LENGTH_SHORT).show();
-            button.setText("停止拉流");
+            AppLogger.getInstance().i("Start play stream OK, streamID = " + playStreamID);
+            Toast.makeText(this, getString(R.string.tx_basic_play_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_stop_play));
         }
         else {
+            /** 停止拉流 */
             /** Begin to stop play stream */
             EditText et = findViewById(R.id.ed_play_stream_id);
             String streamID = et.getText().toString();
             engine.stopPlayingStream(streamID);
             //engine.stopPlayingStream(playStreamID);
-            AppLogger.getInstance().i("调用停止拉流接口成功, 流ID = " + streamID);
-            Toast.makeText(this, "调用停止拉流接口成功", Toast.LENGTH_SHORT).show();
-            button.setText("拉流");
+            AppLogger.getInstance().i("Stop play stream OK, streamID = " + streamID);
+            Toast.makeText(this, getString(R.string.tx_basic_stop_play_ok), Toast.LENGTH_SHORT).show();
+            button.setText(getString(R.string.tx_basic_play));
         }
     }
 
     public void enableLocalMic(View view) {
         if (engine == null) {
-            Toast.makeText(this, "请先初始化SDK", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_sdk_not_init), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -286,12 +318,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         /* Enable Mic*/
-        engine.enableMicrophone(publishMicEnable);
+        engine.muteMicrophone(!publishMicEnable);
     }
 
     public void enableRemoteMic(View view) {
         if (engine == null) {
-            Toast.makeText(this, "请先初始化SDK", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.tx_sdk_not_init), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -307,9 +339,8 @@ public class MainActivity extends AppCompatActivity {
         engine.muteAudioOutput(playStreamMute);
     }
 
-    /**
-     * 校验并请求权限
-     */
+    /** 校验并请求权限 */
+    /** Check and request permission */
     public boolean checkOrRequestPermission() {
         String[] PERMISSIONS_STORAGE = {
                 "android.permission.CAMERA",
@@ -328,14 +359,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // 在应用内实现悬浮窗，需要依附Activity生命周期
         FloatingView.get().attach(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        // // 在应用内实现悬浮窗，需要依附Activity生命周期
         FloatingView.get().detach(this);
+    }
+
+    public static void actionStart(Activity activity) {
+        Intent intent = new Intent(activity, BasicCommunicationActivity.class);
+        activity.startActivity(intent);
     }
 }

@@ -1,2 +1,6 @@
 include ':main',
-        ':common'
+        ':SoundLevel',
+        ':RoomMessage',
+        ':Mixer',
+        ':common',
+        ':QuickStart'

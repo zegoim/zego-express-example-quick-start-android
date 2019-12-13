@@ -1,9 +1,8 @@
 package com.zego.common.widgets.log;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.MotionEvent;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.zego.common.R;
