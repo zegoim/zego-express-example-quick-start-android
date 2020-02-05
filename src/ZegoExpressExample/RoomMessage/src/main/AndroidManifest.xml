@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.zego.im">
+    package="im.zego.im">
 
     <application
         android:debuggable="true"
@@ -12,7 +12,7 @@
             android:required="false" />
 
         <activity
-            android:name=".ui.IMActivity"
+            android:name="im.zego.im.ui.IMActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>

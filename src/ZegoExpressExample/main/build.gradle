@@ -5,7 +5,7 @@ apply plugin: 'bugly'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.zego.expresssample"
+        applicationId "im.zego.expresssample"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode getAppVersionCode()
@@ -99,6 +99,7 @@ dependencies {
     implementation project(path: ':Mixer')
     implementation project(path: ':RoomMessage')
     implementation project(path: ':SoundLevel')
+    implementation project(path: ':Mediaplayer')
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'com.android.volley:volley:1.1.1'

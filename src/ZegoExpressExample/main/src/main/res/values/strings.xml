@@ -11,6 +11,7 @@
     <string name="tx_module_mixer">混流</string>
     <string name="tx_module_im">IM</string>
     <string name="tx_module_soundlevelandspectrum">声浪与音频频谱</string>
+    <string name="tx_module_mediaplayer">媒体播放器</string>
 
     <string name="tx_title_quickstart">快速开始</string>
     <string name="tx_title_advance">进阶功能</string>

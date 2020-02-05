@@ -71,7 +71,7 @@
         android:layout_height="1dp"
         android:background="@color/gray"
         />
-    <com.zego.soundlevelandspectrum.widget.SpectrumView
+    <im.zego.soundlevelandspectrum.widget.SpectrumView
         android:id="@+id/soundlevelandspectrum_spectrum_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
