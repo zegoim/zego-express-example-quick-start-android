@@ -1,4 +1,7 @@
-include ':main', ':Mediaplayer',
+include ':main',
+        ':Mediaplayer',
+        ':CustomVideoRender',
+        ':CustomVideoCapture',
         ':SoundLevel',
         ':RoomMessage',
         ':Mixer',

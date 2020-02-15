@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.TextView;
 
+import im.zego.customrender.ui.ZGVideoRenderTypeUI;
 import im.zego.expresssample.R;
 import im.zego.expresssample.databinding.ActivityMainBinding;
 import im.zego.expresssample.adapter.MainAdapter;
@@ -22,6 +23,7 @@ import im.zego.mediaplayer.ui.MediaplayerMainActivity;
 import im.zego.mixer.ui.MixerMainActivity;
 import im.zego.quickstart.ui.BasicCommunicationActivity;
 import im.zego.soundlevelandspectrum.ui.SoundLevelAndSpectrumMainActivity;
+import im.zego.videocapture.ui.ZGVideoCaptureOriginUI;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -66,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
                     SoundLevelAndSpectrumMainActivity.actionStart(MainActivity.this);
                 }else if(module.equals(getString(R.string.tx_module_mediaplayer))){
                     MediaplayerMainActivity.actionStart(MainActivity.this);
+                }else if(module.equals(getString(R.string.tx_module_custom_render))){
+                    ZGVideoRenderTypeUI.actionStart(MainActivity.this);
+                }else if(module.equals(getString(R.string.tx_module_custom_capture))){
+                    ZGVideoCaptureOriginUI.actionStart(MainActivity.this);
                 }
+
             }
         });
 
@@ -86,6 +93,10 @@ public class MainActivity extends AppCompatActivity {
                 .moduleName(getString(R.string.tx_module_soundlevelandspectrum)));
         mainAdapter.addModuleInfo(new ModuleInfo()
                 .moduleName(getString(R.string.tx_module_mediaplayer)));
+        mainAdapter.addModuleInfo(new ModuleInfo()
+                .moduleName(getString(R.string.tx_module_custom_render)));
+        mainAdapter.addModuleInfo(new ModuleInfo()
+                .moduleName(getString(R.string.tx_module_custom_capture)));
     }
 
 

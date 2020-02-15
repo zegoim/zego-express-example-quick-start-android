@@ -64,6 +64,8 @@ public class MixerMainActivity extends AppCompatActivity {
                     }
                 }
 
+
+
                 @Override
                 public void onPublisherStateUpdate(String streamID, ZegoPublisherState state, int errorCode) {
                     AppLogger.getInstance().i("onPublisherStateUpdate：state =" + state + ", streamID = " + streamID + ", errorCode = " + errorCode);

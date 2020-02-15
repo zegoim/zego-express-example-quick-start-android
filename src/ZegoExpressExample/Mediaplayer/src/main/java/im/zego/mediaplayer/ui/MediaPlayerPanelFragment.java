@@ -105,23 +105,26 @@ public class MediaPlayerPanelFragment extends Fragment {
                     if(isChecked){
                         mMediaplayer = mEngine.createMediaplayer();
                         mMediaplayer.setEventHandler(new IZegoMediaplayerEventHandler() {
+
+
+
                             @Override
                             public void onMediaplayerNetworkEvent(ZegoMediaplayer mediaPlayer, ZegoMediaplayerNetworkEvent networkEvent) {
-                                super.onMediaplayerNetworkEvent(mediaPlayer, networkEvent);
+
                                 Log.d(TAG, "onMediaPlayerNetworkEvent: " + networkEvent);
                                 Toast.makeText(mActivity, "onMediaPlayerNetworkEvent: "+networkEvent, Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onMediaplayerPlayingProgress(ZegoMediaplayer mediaPlayer, long millisecond) {
-                                super.onMediaplayerPlayingProgress(mediaPlayer, millisecond);
+
                                 Log.d(TAG, "onMediaPlayerPlayingProgress: millisecond = "+millisecond+", currentResourceTotalDuration = "+ currentResourceTotalDuration);
                                 aProgressBar.setProgress((int) (100*(millisecond)/(double)currentResourceTotalDuration));
                             }
 
                             @Override
                             public void onMediaplayerStateUpdate(ZegoMediaplayer mediaPlayer, ZegoMediaplayerState state, int errorCode) {
-                                super.onMediaplayerStateUpdate(mediaPlayer, state, errorCode);
+
                                 Log.d(TAG, "onMediaPlayerStateUpdate: state = " + state + ", errorCode = " + errorCode);
                                 if(errorCode != 0){
                                     Toast.makeText(mActivity,
