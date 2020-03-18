@@ -1,9 +1,0 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="im.zego.videocapture" >
-
-    <application>
-        <activity android:name="im.zego.videocapture.ui.ZGVideoCaptureDemoUI" />
-        <activity android:name="im.zego.videocapture.ui.ZGVideoCaptureOriginUI"></activity>
-    </application>
-
-</manifest>

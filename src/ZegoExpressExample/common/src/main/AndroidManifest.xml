@@ -13,8 +13,8 @@
         android:supportsRtl="true">
 
         <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="im.zego.common.fileProvider"
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="im.zego.common.fileProvider_quickstart"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -22,8 +22,5 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name="im.zego.common.ui.WebActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            />
     </application>
 </manifest>
